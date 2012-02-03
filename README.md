@@ -1,17 +1,17 @@
 # CodeIgniter Language Switch
 
 Allows for the switching of languages within CodeIgniter, with a focus on support for SEO friendly URLs, eg.
-http://yoursite.com/welcome (English)
-http://yoursite.com/bienvenu (French)
-http://yoursite.com/bienvenidos (Spanish)
+- http://yoursite.com/welcome (English)
+- http://yoursite.com/bienvenu (French)
+- http://yoursite.com/bienvenidos (Spanish)
 
 SEO URLs default to using language codes if no translation is provided, eg.
-http://yoursite.com/fr/contact (French)
-http://yoursite.com/es/contact (Spanish)
+- http://yoursite.com/fr/contact (French)
+- http://yoursite.com/es/contact (Spanish)
 
 Language codes can also be set as a default as a directory (above) or in query strings, eg.
-http://yoursite.com/contact?lang=fr (French)
-http://yoursite.com/contact?lang=es (Spanish)
+- http://yoursite.com/contact?lang=fr (French)
+- http://yoursite.com/contact?lang=es (Spanish)
 
 ## Requirements
 
