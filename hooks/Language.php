@@ -29,7 +29,7 @@ class Language
 		// Get the URI
 		$uri = $_SERVER['REQUEST_URI'];
 		// Remove the script
-		$uri = preg_replace('/('.addcslashes($_SERVER['SCRIPT_NAME'], '/').'|'.addcslashes(dirname($_SERVER['SCRIPT_NAME']), '/').')?\/?(.*?)(\?.*)?/i', '$2', $uri);
+		$uri = preg_replace('/^('.addcslashes($_SERVER['SCRIPT_NAME'], '/').'|'.addcslashes(dirname($_SERVER['SCRIPT_NAME']), '/').')?\/?(.*?)(\?.*)?$/', '$2', $uri);
 		
 		if($uri!="")
 		{
@@ -38,17 +38,28 @@ class Language
 			{
 				// Let's attempt to translate the URI
 				$segments = explode('/', $uri);
-				foreach($config['segment_translations'] as $language=>$translations) {
-					if(in_array($segments[0], $translations)) {
-						$translations = array_flip($translations);
-						define('LANGUAGE', $language);
-						foreach($segments as $id=>$segment) {
-							$segments[$id] = isset($translations[$segment]) ? $translations[$segment] : $segment;
+				// Is the first segment in the controllers
+				if(file_exists(APPPATH.'controllers/'.$segments[0].'.php') OR is_dir(APPPATH.'controllers/'.$segments[0]))
+				{
+					// If so let's just go with the default language
+					define('LANGUAGE', $config['language']);
+				}
+				else
+				{
+					foreach($config['segment_translations'] as $language=>$translations) {
+						if(in_array($segments[0], $translations)) {
+							$translations = array_flip($translations);
+							define('LANGUAGE', $language);
+							foreach($segments as $id=>$segment) {
+								$segments[$id] = isset($translations[$segment]) ? $translations[$segment] : $segment;
+							}
 						}
 					}
 				}
-
-				$_SERVER['REQUEST_URI'] = implode($segments, '/');
+				
+				$translated_uri = implode('/', $segments);
+				
+				$_SERVER['REQUEST_URI'] = str_replace($uri, $translated_uri, $_SERVER['REQUEST_URI']);
 			}
 
 			if($config['url_style']=="Path" OR ($config['url_style']=="SEO" && !defined('LANGUAGE')))
